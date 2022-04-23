@@ -1,4 +1,5 @@
-import { styled, Button, Alert } from "@mui/material";
+import { styled, Button, Alert, Drawer } from "@mui/material";
+import { Box } from "@mui/system";
 import { useCallback, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToBasket } from "../store/actions/shopActions";
@@ -12,13 +13,13 @@ const Wrapper = styled("div")`
   width: 100px;
   height: 100px;
   border-radius: 50px;
-  background-color: #486df577;
+  background-color: #dfdfdf77;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: 0.2s;
-  ${({ expanded }) =>
+
+  /* ${({ expanded }) =>
     expanded &&
     `
     width: 600px;
@@ -30,8 +31,15 @@ const Wrapper = styled("div")`
     align-items: flex-start;
     justify-content: flex-start;
     padding: 16px;
+  `} */
+
+  ${({ expanded }) =>
+    expanded &&
+    `
+   opacity:0;
+   transition:0;
   `}
-  @media (max-width:620px) {
+  @media (max-width: 620px) {
     position: fixed;
     z-index: 1000;
     right: 20px;
@@ -46,7 +54,7 @@ const Wrapper = styled("div")`
 
     cursor: pointer;
     transition: 0.2s;
-    ${({ expanded }) =>
+    /* ${({ expanded }) =>
       expanded &&
       `
     width: 80%;
@@ -58,11 +66,12 @@ const Wrapper = styled("div")`
     align-items: flex-start;
     justify-content: flex-start;
     
-  `}
+  `} */
   }
 `;
 const BasketIcon = styled("span")`
   font-size: 40px;
+  position: relative;
   ${({ expanded }) =>
     expanded &&
     `
@@ -206,15 +215,105 @@ export function Basket(product) {
     [basket],
   );
   const allItems = useMemo(() => basket.reduce((acc, { count }) => acc + count, 0), [basket]);
-  console.log(allItems);
+
   return (
     <Wrapper expanded={expanded}>
       <ButtonX expanded={expanded} onClick={() => setExpanded(!expanded)}>
         ✖️
       </ButtonX>
       <BasketIcon expanded={expanded}>🛒</BasketIcon>
+      <div
+        style={{
+          position: "absolute",
+          "font-size": "20px",
+          "margin-left": "-10px",
+          "margin-top": "-30px",
+          "background-color": " #68686860",
+          width: "30px",
+          height: "30px",
+          textAlign: "center",
+          borderRadius: "50%",
+        }}>
+        {allItems}
+      </div>
+      <Drawer open={expanded} anchor={"right"} onClose={() => setExpanded(!expanded)}>
+        <Box sx={{ width: { xs: "100%", md: "400px", lg: "600px" } }}>
+          {basket.length ? (
+            <>
+              <div style={{ width: "100%", color: '"red' }}>
+                {basket.length ? (
+                  <h3 style={{ "border-bottom": "1px solid black" }}>
+                    {allItems} items for {allTotal.toFixed(2)}
+                  </h3>
+                ) : (
+                  ""
+                )}
+                {basket.length ? (
+                  <table>
+                    <thead>
+                      <tr style={{ "border-bottom": "1px solid black" }}>
+                        <th>
+                          <ThName>Name</ThName>
+                        </th>
+                        <th>
+                          <ThAmount>Amount</ThAmount>
+                        </th>
+                        <th>
+                          <ThAmount>Total</ThAmount>
+                        </th>
+                      </tr>
+                    </thead>
+                  </table>
+                ) : (
+                  <EmptyIcon>
+                    <div>🤷</div>
+                  </EmptyIcon>
+                )}
+              </div>
 
-      {expanded && (
+              {basket.map(({ product, count }) => (
+                <BasketItem product={product} count={count} key={product.id} />
+              ))}
+              <>{basket.length ? <ButtonReset onClick={handleReset}>Reset </ButtonReset> : ""}</>
+              <>
+                {basket.length ? (
+                  <>
+                    <div
+                      style={{
+                        justifyContent: "space-around",
+                        display: "flex",
+                        alignItems: "center",
+                        fontSize: "18px",
+                        textTransform: "uppercase",
+                      }}>
+                      <p style={{ display: "flex", marginLeft: "20px" }}> Total:</p>
+                      <p style={{ display: "flex", marginLeft: "20px" }}>{allTotal.toFixed(2)}</p>
+                    </div>
+                    <div
+                      style={{
+                        justifyContent: "space-around",
+                        display: "flex",
+                        alignItems: "center",
+                        fontSize: "18px",
+                        textTransform: "uppercase",
+                      }}>
+                      <p style={{ display: "flex", marginLeft: "20px" }}> All items:</p>
+                      <p style={{ display: "flex", marginLeft: "20px" }}>{allItems}</p>
+                    </div>
+                  </>
+                ) : (
+                  ""
+                )}
+              </>
+            </>
+          ) : (
+            <EmptyIcon>
+              <div>🤷</div>
+            </EmptyIcon>
+          )}
+        </Box>
+      </Drawer>
+      {/* {expanded && (
         <div>
           {basket.length ? (
             <h3 style={{ "border-bottom": "1px solid black" }}>
@@ -284,7 +383,7 @@ export function Basket(product) {
             ""
           )}
         </>
-      )}
+      )} */}
     </Wrapper>
   );
 }

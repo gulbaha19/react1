@@ -7,6 +7,17 @@ export const DECREASE_PRODUCT = "shop/decreaseProduct";
 
 export const fetchProducts = () => (dispatch) => {
   axios.get("https://fakestoreapi.com/products").then((res) => {
+    console.log("res", res);
+    res.status === 200
+      ? dispatch({
+          type: "isLoaded",
+          payload: false,
+        })
+      : dispatch({
+          type: "isLoaded",
+          payload: "error",
+        });
+
     dispatch({
       type: SET_PRODUCTS,
       payload: res.data,
@@ -15,6 +26,7 @@ export const fetchProducts = () => (dispatch) => {
 };
 
 export const addToBasket = (product) => (dispatch) => {
+  console.log("action");
   dispatch({
     type: ADD_TO_BASKET,
     payload: product,
