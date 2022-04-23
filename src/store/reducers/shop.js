@@ -27,7 +27,7 @@ export function shop(state = initState, action) {
     case DECREASE_PRODUCT:
       const ind = newState.basket.findIndex((i) => i.product.id === action.payload.id);
       if (newState.basket[ind].count == 1) {
-        function filterbasket(index) {
+        function filterbasket(_, index) {
           return index != ind;
         }
 

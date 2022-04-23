@@ -160,7 +160,7 @@ export function BasketItem({ product, count }) {
   let total = +product.price * +count;
 
   return (
-    <table style={{ "border-bottom": "1px solid #3535354d" }}>
+    <table style={{ "border-bottom": "1px solid #3535354d", backgroundColor: "#e2dfdf39" }}>
       <tbody>
         <tr>
           <td>
@@ -227,7 +227,6 @@ export function Basket(product) {
             <table>
               <thead>
                 <tr style={{ "border-bottom": "1px solid black" }}>
-                  {/* <th style={{ width: "400px" ,@media (max-width:620px)}}>Name</th> */}
                   <th>
                     <ThName>Name</ThName>
                   </th>
